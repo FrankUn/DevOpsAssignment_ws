@@ -44,9 +44,9 @@ RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sud
 
 # --- Install core ROS packages ---
 RUN apt-get update && apt-get install -y \
-    ros-$ROS_VERSION-ros-base
+    # ros-$ROS_VERSION-ros-base
     # To install full desktop version, uncomment below and comment above:
-    # ros-$ROS_VERSION-desktop-full
+    ros-$ROS_VERSION-desktop-full
 
 # --- Initialize rosdep (needed to resolve dependencies later) ---
 RUN apt-get install -y python3-rosdep \
@@ -85,8 +85,8 @@ RUN apt-get update -o Acquire::Retries=3 && \
     ros-$ROS_VERSION-ros-control \
     ros-$ROS_VERSION-ros-controllers \
     ros-$ROS_VERSION-velodyne-simulator \
-    ros-$ROS_VERSION-joint-state-publisher \
-    ros-$ROS_VERSION-robot-state-publisher \
+    #ros-$ROS_VERSION-joint-state-publisher \
+    #ros-$ROS_VERSION-robot-state-publisher \
     && rm -rf /var/lib/apt/lists/*
 
 # --- Workspace and user environment setup ---

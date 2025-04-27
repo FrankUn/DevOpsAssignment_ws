@@ -17,8 +17,7 @@ services:
       - DISPLAY=${DISPLAY}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-    privileged: true
+    privileged: true                      # usually needed if OpenCL / VAAPI is used
     depends_on:
       - roscore
     restart: unless-stopped
-
