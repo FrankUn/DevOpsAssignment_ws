@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  roscore:
+    image: ros-noetic-assignment:latest  # small image with only roscore
+    container_name: roscore_container
+    network_mode: "host"
+    command: bash -c "source /opt/ros/noetic/setup.bash && stdbuf -o L roscore"
+    restart: unless-stopped
+
+  assignment:
+    image: ros-noetic-assignment:latest
+    container_name: assignment_container
+    network_mode: "host"
+    command: tail -f /dev/null
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    privileged: true
+    depends_on:
+      - roscore
+    restart: unless-stopped
+
