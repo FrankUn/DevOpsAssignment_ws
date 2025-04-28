@@ -7,6 +7,10 @@ pipeline {
     triggers {
         pollSCM '* * * * *'
     }
+    environment {
+        // Define recipient list for email notifications
+        EMAIL_RECIPIENTS = 'uniekun1@gmail.com'
+    }
     stages {
         stage('setup caktin workspace') {
             steps {
@@ -37,6 +41,29 @@ pipeline {
                 ./scripts/start_simulation.sh
                 '''
             }
+        }
+    }
+    post {
+        success {
+            emailext(
+                subject: "Jenkins Pipeline Successful",
+                body: "The pipeline completed successfully.",
+                to: "${EMAIL_RECIPIENTS}"
+            )
+        }
+        failure {
+            emailext(
+                subject: "Jenkins Pipeline Failed",
+                body: "The pipeline failed. Please check the logs for more details.",
+                to: "${EMAIL_RECIPIENTS}"
+            )
+        }
+        unstable {
+            emailext(
+                subject: "Jenkins Pipeline Unstable",
+                body: "The pipeline was unstable. Please review the results.",
+                to: "${EMAIL_RECIPIENTS}"
+            )
         }
     }
 }
