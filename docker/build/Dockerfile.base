@@ -1,0 +1,105 @@
+FROM ubuntu:20.04
+ENV ROS_VERSION=noetic
+
+# --- Create user ---
+ENV USERNAME=bot
+ENV HOME=/home/$USERNAME
+
+RUN useradd -m $USERNAME && \
+    echo "$USERNAME:$USERNAME" | chpasswd && \
+    usermod --shell /bin/bash $USERNAME && \
+    usermod -aG sudo $USERNAME && \
+    # The following groups are usually needed on real robots for accessing serial devices, video devices, etc.
+    # Since this image is for simulation, we exclude them:
+    # usermod -aG dialout $USERNAME && \
+    # usermod -aG video $USERNAME && \
+    # usermod -aG plugdev $USERNAME && \
+    mkdir -p /etc/sudoers.d && \
+    echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/$USERNAME && \
+    chmod 0440 /etc/sudoers.d/$USERNAME && \
+    # Ensure the user and group have ID 1000 (common default)
+    usermod --uid 1000 $USERNAME && \
+    groupmod --gid 1000 $USERNAME
+
+# Ensure proper ownership of the home directory
+RUN chown -R $USERNAME:$USERNAME $HOME
+
+# --- General environment setup --  
+# Avoid interactive prompts during apt install -
+ENV DEBIAN_FRONTEND=noninteractive
+
+# --- Install basic utilities ---
+RUN apt-get update && apt-get install -y \
+    lsb-release \
+    gnupg2 \
+    curl \
+    wget \
+    git \
+    sudo \
+    && rm -rf /var/lib/apt/lists/*
+
+# --- Setup ROS Noetic sources ---
+RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+
+# --- Install core ROS packages ---
+RUN apt-get update && apt-get install -y \
+    # ros-$ROS_VERSION-ros-base
+    # To install full desktop version, uncomment below and comment above:
+    ros-$ROS_VERSION-desktop-full
+
+# --- Initialize rosdep (needed to resolve dependencies later) ---
+RUN apt-get install -y python3-rosdep \
+    && rosdep init \
+    && rosdep update
+
+# --- Install catkin tools (personal preference for workspace builds) ---
+RUN apt-get update && apt-get install -y \
+    python3-catkin-tools \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set ROS master URI environment variable (optional for localhost-only simulation)
+ENV ROS_MASTER_URI=http://localhost:11311
+
+# --- Use NCHC mirror for faster downloads (Taiwan users) ---
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://free.nchc.org.tw/ubuntu/|g' /etc/apt/sources.list
+
+# --- Install essential build tools ---
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    python3-pip \
+    python3-catkin-tools \
+    && rm -rf /var/lib/apt/lists/*
+
+# --- Install additional ROS packages ---
+# joint-state-publisher & robot-state-publisher is not included in ros base version
+# (Normally not needed unless network issues or mirror access problems in Mainland China)
+RUN apt-get update -o Acquire::Retries=3 && \
+    apt-get install -y --no-install-recommends \
+    ros-$ROS_VERSION-ackermann-msgs \
+    ros-$ROS_VERSION-geometry2 \
+    ros-$ROS_VERSION-hector-gazebo-plugins \
+    ros-$ROS_VERSION-hector-models \
+    ros-$ROS_VERSION-jsk-rviz-plugins \
+    ros-$ROS_VERSION-ros-control \
+    ros-$ROS_VERSION-ros-controllers \
+    ros-$ROS_VERSION-velodyne-simulator \
+    #ros-$ROS_VERSION-joint-state-publisher \
+    #ros-$ROS_VERSION-robot-state-publisher \
+    && rm -rf /var/lib/apt/lists/*
+
+# --- Workspace and user environment setup ---
+WORKDIR $HOME
+RUN rm -rf $HOME/Downloads
+
+# Ensure .ros and .config directories exist and are owned by bot user
+RUN mkdir -p $HOME/.ros && chown -R $USERNAME:$USERNAME $HOME/.ros
+RUN mkdir -p $HOME/.config && chown -R $USERNAME:$USERNAME $HOME/.config
+
+# Automatically source ROS setup in bash sessions
+RUN echo "source /opt/ros/$ROS_VERSION/setup.bash" >> $HOME/.bashrc
+
+# --- Default command ---
+CMD ["bash"]
+
