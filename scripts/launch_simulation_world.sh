@@ -6,7 +6,7 @@ source /opt/ros/noetic/setup.bash
 
 # Source workspace setup
 echo "Source workspace setup"
-source /home/bot/workspace/my_first_build_pipeline/assignment_ws/devel/setup.bash
+source assignment_ws/devel/setup.bash
 
 # Launch Gazebo and RViz in the background
 roslaunch gem_gazebo gem_gazebo_rviz.launch &
