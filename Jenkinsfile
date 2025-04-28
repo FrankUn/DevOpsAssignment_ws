@@ -4,9 +4,9 @@ pipeline {
             label 'ros-noetic'
             }
       }
-    triggers {
-        pollSCM '* * * * *'
-    }
+    // triggers {
+    //     pollSCM '* * * * *'
+    // }
     environment {
         // Define recipient list for email notifications
         EMAIL_RECIPIENTS = 'uniekun1@gmail.com'
