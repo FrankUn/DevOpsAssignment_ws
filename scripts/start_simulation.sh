@@ -35,6 +35,8 @@ do
             # Cleanly terminate the simulation by killing the rosrun process
             kill $ROS_PID
             wait $ROS_PID
+            # Trigger the email notification for failure
+            echo "Crosstrack Error exceeded $FAIL_CRITERIA m, terminating simulation!" | mail -s "Simulation Failure: Crosstrack Error Exceeded" your_email@example.com
             exit 1
         fi
     fi
