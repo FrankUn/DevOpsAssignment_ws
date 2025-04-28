@@ -94,8 +94,8 @@ WORKDIR $HOME
 RUN rm -rf $HOME/Downloads
 
 # Ensure .ros and .config directories exist and are owned by bot user
-RUN mkdir -p $HOME/.ros && chown -R bot:bot $HOME/.ros
-RUN mkdir -p $HOME/.config && chown -R bot:bot $HOME/.config
+RUN mkdir -p $HOME/.ros && chown -R $USERNAME:$USERNAME $HOME/.ros
+RUN mkdir -p $HOME/.config && chown -R $USERNAME:$USERNAME $HOME/.config
 
 # Automatically source ROS setup in bash sessions
 RUN echo "source /opt/ros/$ROS_VERSION/setup.bash" >> $HOME/.bashrc

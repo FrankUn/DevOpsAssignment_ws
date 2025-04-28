@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Define image names and tags
 BASE_IMAGE_NAME="ros-base:noetic"
-WS_IMAGE_NAME="ros-noetic-assignment"
+WS_IMAGE_NAME="ros-noetic:base-jdk11"
 BASE_DOCKERFILE="$SCRIPT_DIR/Dockerfile.base"
 WS_DOCKERFILE="$SCRIPT_DIR/Dockerfile"
 
