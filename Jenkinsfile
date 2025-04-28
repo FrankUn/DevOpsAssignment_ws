@@ -11,13 +11,10 @@ pipeline {
         stage('setup caktin workspace') {
             steps {
                 echo "Catkin Workspace Setup...."
-                sh ''' #!/bin/bash
-                source /opt/ros/noetic/setup.bash
-                mkdir -p assignment_ws/src
-                git clone https://gitlab.engr.illinois.edu/gemillins/POLARIS_GEM_e2.git assignment_ws/src
-                cd assignment_ws
-                catkin build -cs
-                source devel/setup.bash
+                sh '''
+                # Ensure script is executable and then run it
+                chmod +x ./setup_workspace.sh
+                ./setup_workspace.sh
                 '''
             }
         }
