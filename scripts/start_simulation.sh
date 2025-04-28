@@ -11,6 +11,7 @@ source /home/bot/workspace/my_first_build_pipeline/assignment_ws/devel/setup.bas
 # Start the simulation
 rosrun gem_pure_pursuit_sim pure_pursuit_sim.py | while read -r line
 do
+    echo "origin output is: $line"
     # Extract Crosstrack Error value using regex (assuming it's always in the format: Crosstrack Error: <value>)
     if [[ "$line" =~ Crosstrack\ Error:\ ([0-9]+\.[0-9]+) ]]; then
         # Capture the error value
