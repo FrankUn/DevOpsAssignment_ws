@@ -17,6 +17,7 @@ pipeline {
                 ./setup_workspace.sh
                 '''
             }
+        }
         stage('launch the simulation') {
             steps {
                 echo "Launching gazebo and rviz..."
@@ -32,7 +33,6 @@ pipeline {
                 rosrun gem_pure_pursuit_sim pure_pursuit_sim.py
                 '''
             }
-        }
         }
     }
 }
