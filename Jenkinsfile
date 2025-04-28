@@ -4,12 +4,12 @@ pipeline {
             label 'ros-noetic'
             }
       }
-    // triggers {
+    // triggers { # For testing purpose, not necessary for this project structure
     //     pollSCM '* * * * *'
     // }
     environment {
         // Define recipient list for email notifications
-        EMAIL_RECIPIENTS = 'uniekun1@gmail.com'
+        EMAIL_RECIPIENTS = 'youremail@example.com'
     }
     stages {
         stage('setup caktin workspace') {

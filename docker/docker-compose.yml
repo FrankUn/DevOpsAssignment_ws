@@ -2,14 +2,14 @@ version: '3.8'
 
 services:
   roscore:
-    image: ros-noetic-assignment:latest  # small image with only roscore
+    image: ros-base:noetic  # small image with only roscore
     container_name: roscore_container
     network_mode: "host"
     command: bash -c "source /opt/ros/noetic/setup.bash && stdbuf -o L roscore"
     restart: unless-stopped
 
   assignment:
-    image: ros-noetic-assignment:latest
+    image: ros-noetic:base-jdk11
     container_name: assignment_container
     network_mode: "host"
     command: tail -f /dev/null
