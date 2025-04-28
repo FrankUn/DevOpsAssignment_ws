@@ -8,30 +8,15 @@ pipeline {
         pollSCM '* * * * *'
     }
     stages {
-        stage('Build') {
+        stage('setup caktin workspace') {
             steps {
-                echo "Building.."
+                echo "Catkin Workspace Setup...."
                 sh '''
-                cd test
-                pip install -r requirements.txt
-                '''
-            }
-        }
-        stage('Test') {
-            steps {
-                echo "Testing.."
-                sh '''
-                cd test
-                python3 hello.py
-                python3 hello.py --name=Frank
-                '''
-            }
-        }
-        stage('Deliver') {
-            steps {
-                echo 'Deliver....'
-                sh '''
-                echo "doing delivery stuff.."
+                mkdir -p assignment_ws/src
+                git clone https://gitlab.engr.illinois.edu/gemillins/POLARIS_GEM_e2.git assignment_ws/src
+                cd assignment_ws
+                catkin build -cs
+                source devel/setup.bash
                 '''
             }
         }
