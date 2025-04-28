@@ -12,6 +12,7 @@ pipeline {
             steps {
                 echo "Catkin Workspace Setup...."
                 sh '''
+                source /opt/ros/noetic/setup.bash
                 mkdir -p assignment_ws/src
                 git clone https://gitlab.engr.illinois.edu/gemillins/POLARIS_GEM_e2.git assignment_ws/src
                 cd assignment_ws
