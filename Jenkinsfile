@@ -13,8 +13,8 @@ pipeline {
                 echo "Catkin Workspace Setup...."
                 sh '''
                 # Ensure script is executable and then run it
-                chmod +x ./setup_workspace.sh
-                ./setup_workspace.sh
+                chmod +x ./scripts/setup_workspace.sh
+                ./scripts/setup_workspace.sh
                 '''
             }
         }
@@ -22,7 +22,9 @@ pipeline {
             steps {
                 echo "Launching gazebo and rviz..."
                 sh '''
-                roslaunch gem_gazebo gem_gazebo_rviz.launch
+                # Ensure script is executable and then run it
+                chmod +x ./scripts/launch_simulation_world.sh
+                ./scripts/launch_simulation_world.sh
                 '''
             }
         }
@@ -30,7 +32,9 @@ pipeline {
             steps {
                 echo "Simulation Start!"
                 sh '''
-                rosrun gem_pure_pursuit_sim pure_pursuit_sim.py
+                # Ensure script is executable and then run it
+                chmod +x ./scripts/start_simulation.sh
+                ./scripts/start_simulation.sh
                 '''
             }
         }
