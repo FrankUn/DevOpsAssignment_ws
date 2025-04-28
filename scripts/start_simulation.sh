@@ -23,7 +23,7 @@ do
         echo "Absolute Crosstrack Error: $abs_crosstrack_error"
 
         # Check if the absolute Crosstrack Error is greater than 1 meter using awk
-        result=$(echo "$abs_crosstrack_error > 1" | awk '{if ($1 == 1) print 1; else print 0}')
+        result=$(echo "$abs_crosstrack_error > 0.5" | awk '{if ($1 == 1) print 1; else print 0}')
         if [ "$result" -eq 1 ]; then
             echo "Absolute Crosstrack Error exceeds 1m, terminating simulation!"
             # Terminate the simulation by killing the rosrun process
