@@ -1,5 +1,5 @@
 #!/bin/bash
-FAIL_CRITERIA=0.5
+FAIL_CRITERIA=1
 
 # Source ROS setup
 echo "Source ROS setup"
